@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
@@ -36,7 +36,7 @@ contract StreakBadgeNFT is ERC721, Ownable2Step {
 
     event StreakUpdated(uint256 indexed habitId, uint256 streak, bool isBreak);
 
-    constructor(address _habitInstance) ERC721("StreakBadge", "STREAK") {
+    constructor(address _habitInstance) ERC721("StreakBadge", "STREAK") Ownable2Step {
         habitInstance = IHabitInstance(_habitInstance);
     }
 

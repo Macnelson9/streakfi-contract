@@ -1,17 +1,22 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.24;
 
-import "@openzeppelin/contracts/access/Ownable2Step.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title HabitRegistry
  * @dev Registry for tracking user habits and global statistics.
  */
-contract HabitRegistry is Ownable2Step {
+contract HabitRegistry is Ownable {
 
-    constructor() Ownable2Step() {}
+    struct UserHabits {
+        uint256[] habitIds;
+        uint256 count;
+    }
 
-    mapping(address => uint256[]) public userHabits;
+    constructor() Ownable(msg.sender) {}
+
+    mapping(address => UserHabits) public userHabits;
     uint256 public totalHabits;
     uint256 public totalStakeETH;
     uint256 public totalStakeUSDC;
@@ -27,7 +32,8 @@ contract HabitRegistry is Ownable2Step {
      * @param stake The stake amount.
      */
     function register(address owner, uint256 habitId, address token, uint256 stake) external onlyOwner {
-        userHabits[owner].push(habitId);
+        userHabits[owner].habitIds.push(habitId);
+        userHabits[owner].count++;
         totalHabits++;
         if (token == address(0)) {
             totalStakeETH += stake;
@@ -50,5 +56,23 @@ contract HabitRegistry is Ownable2Step {
             if (delta > 0) totalStakeUSDC += uint256(delta);
             else totalStakeUSDC -= uint256(-delta);
         }
+    }
+
+    /**
+     * @dev Get habit count for a user.
+     * @param user The user address.
+     * @return The number of habits for the user.
+     */
+    function getHabitCount(address user) external view returns (uint256) {
+        return userHabits[user].count;
+    }
+
+    /**
+     * @dev Get habit IDs for a user.
+     * @param user The user address.
+     * @return Array of habit IDs for the user.
+     */
+    function getHabitIds(address user) external view returns (uint256[] memory) {
+        return userHabits[user].habitIds;
     }
 }
