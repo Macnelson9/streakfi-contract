@@ -43,7 +43,7 @@ contract HabitInstance is Ownable2Step, ReentrancyGuard, Pausable {
     uint256 public nextHabitId = 1;
     uint256 constant GRACE_PERIOD = 24 hours;
     uint256 constant PENALTY_RATE = 2; // 2%
-    uint256 constant MIN_USD = 5;
+    uint256 constant MIN_USD = 1;
 
     enum Frequency { Daily, Weekdays }
 
